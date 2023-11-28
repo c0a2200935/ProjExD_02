@@ -49,7 +49,11 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
-
+        
+        if kk_rect.colliderect(bb_rect):
+            print("Game Over")
+            return
+        
         key_lst = pg.key.get_pressed()
         sum_move = [0,0]
         for k,tpl in delta.items():
@@ -70,6 +74,7 @@ def main():
             vy *= -1
         bb_rect.move_ip(vx,vy)
         screen.blit(bb_bomb,bb_rect)  #練習１
+
         pg.display.update()
         tmr += 1
         clock.tick(50)
