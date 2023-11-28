@@ -33,7 +33,10 @@ def main():
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
+    kk_gameover_img = pg.image.load("ex02/fig/8.png")
+    kk_gameover_img = pg.transform.rotozoom(kk_gameover_img, 0, 2.0)
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
+
     kk_rect = kk_img.get_rect()
     kk_rect.center = 900, 400
     clock = pg.time.Clock()
@@ -65,6 +68,7 @@ def main():
                 return
         
         if kk_rect.colliderect(bb_rect):
+            
             print("Game Over")
             return
         
@@ -75,11 +79,9 @@ def main():
             if key_lst[k]: 
                 sum_move[0] += tpl[0]
                 sum_move[1] += tpl[1]
-        
     
         screen.blit(bg_img, [0, 0])
         kk_rect.move_ip(sum_move[0],sum_move[1])
-        kk_zoom[tuple(sum_move)]  #演習１
         if check_bound(kk_rect) != (True,True):
             kk_rect.move_ip(-sum_move[0],-sum_move[1])
         screen.blit(kk_zoom[tuple(sum_move)], kk_rect)  #演習１
@@ -91,7 +93,11 @@ def main():
             vy *= -1
         bb_rect.move_ip(vx,vy)
         screen.blit(bb_bomb,bb_rect)  #練習１
-
+        speed = 0
+        if tmr % 10 == 0 and speed < 10:
+            vx *= 1.01
+            vy *= 1.01
+            speed += 1
         pg.display.update()
         tmr += 1
         clock.tick(50)
