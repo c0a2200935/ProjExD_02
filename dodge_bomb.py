@@ -19,6 +19,8 @@ def main():
     bb_bomb.set_colorkey((0,0,0)) #練習１
     bb_rect.centerx = random.randint(0,WIDTH)  #練習１
     bb_rect.centery = random.randint(0,HEIGHT)  #練習１
+    vx,vy = 5,1 #練習２
+    
     tmr = 0
     while True:
         for event in pg.event.get():
@@ -27,10 +29,11 @@ def main():
 
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, [900, 400])
-        screen.blit(bb_bomb,bb_rect)
+        bb_rect.move_ip(vx,vy) #練習2　爆弾の移動
+        screen.blit(bb_bomb,bb_rect)  #練習１
         pg.display.update()
         tmr += 1
-        clock.tick(10)
+        clock.tick(50)
 
 
 if __name__ == "__main__":
