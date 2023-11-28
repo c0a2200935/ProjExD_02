@@ -62,13 +62,17 @@ def main():
     (5,-5):pg.transform.rotozoom(pg.transform.flip(kk_img,False,True),-135,1),
     }
 
+    kk_root = [0,0]
+    speed = 0 #演習２加速
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
         
         if kk_rect.colliderect(bb_rect):
-            
+            screen.blit(bg_img, [0, 0])  #演習３
+            screen.blit(kk_gameover_img,kk_rect)  #演習３
+            pg.display.update()  #演習３
             print("Game Over")
             return
         
@@ -79,12 +83,14 @@ def main():
             if key_lst[k]: 
                 sum_move[0] += tpl[0]
                 sum_move[1] += tpl[1]
+        if sum_move != [0,0]:
+            kk_root = sum_move
     
         screen.blit(bg_img, [0, 0])
         kk_rect.move_ip(sum_move[0],sum_move[1])
         if check_bound(kk_rect) != (True,True):
             kk_rect.move_ip(-sum_move[0],-sum_move[1])
-        screen.blit(kk_zoom[tuple(sum_move)], kk_rect)  #演習１
+        screen.blit(kk_zoom[tuple(kk_root)], kk_rect)  #演習１
         bb_rect.move_ip(vx,vy) #練習2　爆弾の移動
         yoko,tate = check_bound(bb_rect)
         if not yoko:
@@ -93,15 +99,15 @@ def main():
             vy *= -1
         bb_rect.move_ip(vx,vy)
         screen.blit(bb_bomb,bb_rect)  #練習１
-        speed = 0
-        if tmr % 10 == 0 and speed < 10:
-            vx *= 1.01
-            vy *= 1.01
+        
+        if tmr % 50 == 0 and speed < 10: #演習２
+            vx *= 1.1
+            vy *= 1.1
             speed += 1
         pg.display.update()
         tmr += 1
         clock.tick(50)
-
+        
 
 if __name__ == "__main__":
     pg.init()
