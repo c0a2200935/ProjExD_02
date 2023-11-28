@@ -13,6 +13,7 @@ delta = {
 }
 
 
+
 def check_bound(rct: pg.Rect) -> tuple[bool,bool]:
     """
     オブジェクトが画面内or画面外を判定し真理値タプルを返す関数
@@ -45,6 +46,19 @@ def main():
     vx,vy = 5,5 #練習２
     
     tmr = 0
+
+    kk_zoom = {  #演習１
+    (0,0):pg.transform.rotozoom(kk_img,0,1),
+    (5,0):pg.transform.flip(kk_img,True,False),
+    (5,5):pg.transform.rotozoom(pg.transform.flip(kk_img,False,True),135,1),
+    (0,5):pg.transform.rotozoom(pg.transform.flip(kk_img,False,True),90,1),
+    (-5,5):pg.transform.rotozoom(kk_img,45,1),
+    (-5,0):pg.transform.rotozoom(kk_img,0,1),
+    (-5,-5):pg.transform.rotozoom(kk_img,-45,1),
+    (0,-5):pg.transform.rotozoom(pg.transform.flip(kk_img,False,True),-90,1),
+    (5,-5):pg.transform.rotozoom(pg.transform.flip(kk_img,False,True),-135,1),
+    }
+
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -54,18 +68,21 @@ def main():
             print("Game Over")
             return
         
+        
         key_lst = pg.key.get_pressed()
         sum_move = [0,0]
         for k,tpl in delta.items():
             if key_lst[k]: 
                 sum_move[0] += tpl[0]
                 sum_move[1] += tpl[1]
-
+        
+    
         screen.blit(bg_img, [0, 0])
         kk_rect.move_ip(sum_move[0],sum_move[1])
+        kk_zoom[tuple(sum_move)]  #演習１
         if check_bound(kk_rect) != (True,True):
             kk_rect.move_ip(-sum_move[0],-sum_move[1])
-        screen.blit(kk_img, kk_rect)
+        screen.blit(kk_zoom[tuple(sum_move)], kk_rect)  #演習１
         bb_rect.move_ip(vx,vy) #練習2　爆弾の移動
         yoko,tate = check_bound(bb_rect)
         if not yoko:
