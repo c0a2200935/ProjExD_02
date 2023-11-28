@@ -5,13 +5,13 @@ import pygame as pg
 
 WIDTH, HEIGHT = 1600, 800
 
+
 delta = {
     pg.K_UP:(0,-5),
     pg.K_DOWN:(0,5),
     pg.K_LEFT:(-5,0),
     pg.K_RIGHT:(5,0)
 }
-
 
 
 def check_bound(rct: pg.Rect) -> tuple[bool,bool]:
@@ -36,7 +36,6 @@ def main():
     kk_gameover_img = pg.image.load("ex02/fig/8.png")
     kk_gameover_img = pg.transform.rotozoom(kk_gameover_img, 0, 2.0)
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
-
     kk_rect = kk_img.get_rect()
     kk_rect.center = 900, 400
     clock = pg.time.Clock()
@@ -64,6 +63,7 @@ def main():
 
     kk_root = [0,0]
     speed = 0 #演習２加速
+
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -76,27 +76,33 @@ def main():
             print("Game Over")
             return
         
-        
         key_lst = pg.key.get_pressed()
         sum_move = [0,0]
+
         for k,tpl in delta.items():
             if key_lst[k]: 
                 sum_move[0] += tpl[0]
                 sum_move[1] += tpl[1]
+    
         if sum_move != [0,0]:
             kk_root = sum_move
     
         screen.blit(bg_img, [0, 0])
         kk_rect.move_ip(sum_move[0],sum_move[1])
+
         if check_bound(kk_rect) != (True,True):
             kk_rect.move_ip(-sum_move[0],-sum_move[1])
+        
         screen.blit(kk_zoom[tuple(kk_root)], kk_rect)  #演習１
         bb_rect.move_ip(vx,vy) #練習2　爆弾の移動
         yoko,tate = check_bound(bb_rect)
+        
         if not yoko:
             vx *= -1
+        
         if not tate:
             vy *= -1
+        
         bb_rect.move_ip(vx,vy)
         screen.blit(bb_bomb,bb_rect)  #練習１
         
@@ -104,6 +110,7 @@ def main():
             vx *= 1.1
             vy *= 1.1
             speed += 1
+
         pg.display.update()
         tmr += 1
         clock.tick(50)
