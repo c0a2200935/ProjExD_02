@@ -12,6 +12,21 @@ delta = {
     pg.K_RIGHT:(5,0)
 }
 
+
+def check_bound(rct: pg.Rect) -> tuple[bool,bool]:
+    """
+    オブジェクトが画面内or画面外を判定し真理値タプルを返す関数
+    引数　rct:こうかとんor爆弾Surfaceのrect
+    戻り値：横方向、縦方向判定結果(画面内：True,画面外：False)
+    """
+    yoko,tate =True,True
+    if rct.left < 0 or WIDTH < rct.right:
+        yoko = False
+    if rct.top < 0 or HEIGHT < rct.bottom:
+        tate = False
+    return yoko,tate
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -19,6 +34,7 @@ def main():
     kk_img = pg.image.load("ex02/fig/3.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
     kk_rect = kk_img.get_rect()
+    kk_rect.center = 900, 400
     clock = pg.time.Clock()
     bb_bomb = pg.Surface((20,20))  #練習１
     pg.draw.circle(bb_bomb,(255,0,0),(10,10),10)  #練習１
@@ -43,8 +59,16 @@ def main():
 
         screen.blit(bg_img, [0, 0])
         kk_rect.move_ip(sum_move[0],sum_move[1])
+        if check_bound(kk_rect) != (True,True):
+            kk_rect.move_ip(-sum_move[0],-sum_move[1])
         screen.blit(kk_img, kk_rect)
         bb_rect.move_ip(vx,vy) #練習2　爆弾の移動
+        yoko,tate = check_bound(bb_rect)
+        if not yoko:
+            vx *= -1
+        if not tate:
+            vy *= -1
+        bb_rect.move_ip(vx,vy)
         screen.blit(bb_bomb,bb_rect)  #練習１
         pg.display.update()
         tmr += 1
