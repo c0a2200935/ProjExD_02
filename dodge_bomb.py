@@ -61,7 +61,7 @@ def main():
     (5,-5):pg.transform.rotozoom(pg.transform.flip(kk_img,False,True),-135,1),
     }
 
-    kk_root = [0,0]
+    kk_root = [0,0] #こうかとんの向く方向
     speed = 0 #演習２加速
 
     while True:
